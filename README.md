@@ -1,6 +1,7 @@
 # Daily Revenue Automation & Alerting System
 
 An automated data pipeline built with **n8n** to fetch, filter, and summarize daily sales data from Google Sheets, send beautifully formatted HTML reports to the sales manager, and trigger escalation alerts to the CEO if daily targets are not met.
+![n8n Workflow](workflow.png)
 
 ## ⚙️ Workflow Architecture & Logic
 1. **Schedule Trigger:** Runs automatically every day at 23:59 to process the full day's data.
