@@ -48,3 +48,23 @@ An intelligent, automated ticketing system that handles incoming internal suppor
 * **LLM Engine:** Google Gemini 2.5 Flash Chat Model
 * **Data Logging:** Google Sheets API
 * **Notification & Interaction:** Gmail API (with Wait-for-Response Webhooks)
+
+* ---
+
+## 📌 Project 3: AI School Feedback Sentiment & Insight Analyzer
+
+An end-to-end AI-powered data processor that monitors school feedback forms, uses **Gemini 2.5 Flash** to run instant sentiment analysis, extracts structured, detailed operational insights from parent opinions, and logs/notifies management dynamically.
+
+### ⚙️ Workflow Architecture & Logic
+1. **Google Sheets Trigger:** Fires instantly whenever a new school/staff evaluation response is added.
+2. **Sentiment Classification (LLM Agent 1):** Passes the review to **Gemini 2.5 Flash** to categorize the emotional tone strictly into one Arabic word: `إيجابي` (Positive), `سلبي` (Negative), or `محايد` (Neutral).
+3. **Database Logging (Step 1):** Updates the row in Google Sheets with the calculated sentiment categorization.
+4. **Insight Extraction (LLM Agent 2):** Processes the same text to extract specific bullet-pointed feedback regarding key aspects (e.g., Teaching Quality, Facilities, Cleanliness, Administration).
+5. **Database Logging (Step 2):** Logs the highly structured bullet points back into the spreadsheet.
+6. **Executive Alerting (Gmail API):** Combines the overall sentiment and the extracted points, then sends a neat text alert to the administration for rapid response.
+
+### 🛠️ Tech Stack & Tools
+* **Automation Platform:** n8n
+* **AI Engine:** Google Gemini 2.5 Flash (via LangChain Integration)
+* **Data Core:** Google Sheets API (Polling & Conditional Updating)
+* **Alerting System:** Gmail API
