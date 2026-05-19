@@ -1,0 +1,439 @@
+{
+  "name": "Sentiment Analysis",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1FccRSoB3538Lt44KIdnY5QrsuQuTmelG42j_s5-flWs",
+          "mode": "list",
+          "cachedResultName": "مدارس S2A (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FccRSoB3538Lt44KIdnY5QrsuQuTmelG42j_s5-flWs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 258850349,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FccRSoB3538Lt44KIdnY5QrsuQuTmelG42j_s5-flWs/edit#gid=258850349"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        -80
+      ],
+      "id": "1ef056b8-ae8a-4067-a153-2fb7d5b22b47",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "yJsLJn8U3d5eCSle",
+          "name": "Google Sheets Trigger OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json['تقييم عن المدرسة والكادر '] }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "systemMessage": "=# Role\nYou are a specialized AI agent designed to perform sentiment analysis on school-related feedback and customer reviews. Your sole purpose is to classify the emotional tone of the text provided by the user.\n\n# Behavior\nYou must analyze the user input objectively and provide a single-word classification. Do not include any conversational text, explanations, or additional punctuation. \n\n# Tone Categories\nYou must classify the sentiment into exactly one of the following three Arabic words based on the criteria:\n* إيجابي (Positive): If the feedback expresses satisfaction, praise, or happiness regarding the school.\n* سلبي (Negative): If the feedback expresses dissatisfaction, complaints, or criticism regarding the school.\n* محايد (Neutral): If the feedback is factual, lacks emotional expression, or contains an equal balance of positive and negative remarks.\n\n# Output Format\nYour response must consist of only one word from the allowed categories (إيجابي, سلبي, محايد). Never write anything else."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        -32,
+        -80
+      ],
+      "id": "a48b416d-d0db-4cbf-bdcc-673d763c1b93",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "bGMtbQzBfC8Bsz7I",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1FccRSoB3538Lt44KIdnY5QrsuQuTmelG42j_s5-flWs",
+          "mode": "list",
+          "cachedResultName": "مدارس S2A (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FccRSoB3538Lt44KIdnY5QrsuQuTmelG42j_s5-flWs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 258850349,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FccRSoB3538Lt44KIdnY5QrsuQuTmelG42j_s5-flWs/edit#gid=258850349"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "نتيجة التحليل ": "={{ $json.content.parts[0].text }}",
+            "Timestamp": "={{ $('Google Sheets Trigger').item.json.Timestamp }}"
+          },
+          "matchingColumns": [
+            "Timestamp"
+          ],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "الاسم ",
+              "displayName": "الاسم ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "الايميل",
+              "displayName": "الايميل",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "تقييم عن المدرسة والكادر ",
+              "displayName": "تقييم عن المدرسة والكادر ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "نتيجة التحليل ",
+              "displayName": "نتيجة التحليل ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        320,
+        -80
+      ],
+      "id": "2b3513d0-bfb2-4ecc-bdbf-af424d9ad954",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Ox5KEjdLghW2jhmX",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "Shadituned@gmail.com",
+        "subject": "رأي",
+        "emailType": "text",
+        "message": "={{ $json['تنظيم الرد'] }}\n{{ $('Message a model').item.json.content.parts[0].text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        -80
+      ],
+      "id": "847aac04-8ef9-4cf0-832f-38a33924fbfa",
+      "name": "Send a message",
+      "webhookId": "4691814a-ef1c-4749-ae38-1ba1cc25efa9",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "eXfm5mtJ9j5XfhqZ",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $('Google Sheets Trigger').item.json['تقييم عن المدرسة والكادر '] }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "systemMessage": "=# Role\nYou are a specialized AI agent designed to extract and analyze specific feedback points from customer and parent reviews for a school. Your primary objective is to break down the user's opinion into distinct, actionable bullet points that highlight both positive and negative aspects of their experience.\n\n# Behavior\nYou must analyze the text objectively, extracting explicit statements regarding different aspects of the school (such as teaching quality, facilities, cleanliness, administration, or atmosphere). Your output must be presented directly as a clear bulleted list in Arabic. Do not include any introductory remarks, conversational filler, or explanations.\n\n# Output Format\nYour response must follow this exact format structure, listing the extracted points clearly:\n\n* [Aspect evaluated]: [Brief summary of the opinion]\n\nExamples of expected output format:\n* جودة التعليم: المدرس سيء وغير متعاون.\n* البيئة المدرسية: المدرسة جميلة ومنظمة.\n* المرافق والنظافة: الغرفة الصفية غير نظيفة.\n\n# Constraints\n* Rely only on the clear facts and direct opinions mentioned in the input text. Do not assume or extrapolate details not explicitly provided.\n* Keep each bullet point concise and direct."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        544,
+        -80
+      ],
+      "id": "1ac9daa2-add9-4643-9a0d-ad00ae408fbe",
+      "name": "Message a model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "bGMtbQzBfC8Bsz7I",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1FccRSoB3538Lt44KIdnY5QrsuQuTmelG42j_s5-flWs",
+          "mode": "list",
+          "cachedResultName": "مدارس S2A (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FccRSoB3538Lt44KIdnY5QrsuQuTmelG42j_s5-flWs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 258850349,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FccRSoB3538Lt44KIdnY5QrsuQuTmelG42j_s5-flWs/edit#gid=258850349"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $('Google Sheets Trigger').item.json.Timestamp }}",
+            "تنظيم الرد": "={{ $json.content.parts[0].text }}"
+          },
+          "matchingColumns": [
+            "Timestamp"
+          ],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "الاسم ",
+              "displayName": "الاسم ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "الايميل",
+              "displayName": "الايميل",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "تقييم عن المدرسة والكادر ",
+              "displayName": "تقييم عن المدرسة والكادر ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "نتيجة التحليل ",
+              "displayName": "نتيجة التحليل ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "تنظيم الرد",
+              "displayName": "تنظيم الرد",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        896,
+        -80
+      ],
+      "id": "5c680a39-3458-4171-8035-992606c17d11",
+      "name": "Update row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Ox5KEjdLghW2jhmX",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Message a model1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model1": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "c0ffd82e-da70-4221-8d99-57e49c782541",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "51e97f831d598fff4c7192630cb0f159e644761336dc724227bbd898a06be2b8"
+  },
+  "id": "vdZuqjyrrMWsrZu6",
+  "tags": []
+}
