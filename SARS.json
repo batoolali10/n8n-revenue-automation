@@ -1,0 +1,314 @@
+{
+  "name": "SARS",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 23,
+              "triggerAtMinute": 59
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1056,
+        -48
+      ],
+      "id": "4b09eda9-57af-471b-bcb6-b8667c308857",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1RyR68O2KKvBziaGzeNqzNcTDxP0e4yla_ZoGc1CSB2M",
+          "mode": "list",
+          "cachedResultName": "Proj 2 - SARS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RyR68O2KKvBziaGzeNqzNcTDxP0e4yla_ZoGc1CSB2M/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RyR68O2KKvBziaGzeNqzNcTDxP0e4yla_ZoGc1CSB2M/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -832,
+        -48
+      ],
+      "id": "330d8295-3043-4053-8d35-bf16512cfefe",
+      "name": "Get row(s) in sheet",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ygF08lcYYhFQkB6D",
+          "name": "Google Sheets OAuth2 API"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "aggregation": "sum",
+              "field": "Revenue"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.summarize",
+      "typeVersion": 1.1,
+      "position": [
+        -384,
+        -192
+      ],
+      "id": "d2cc1f75-4fa9-4ae7-889c-d3ed662d18c8",
+      "name": "Summarize"
+    },
+    {
+      "parameters": {
+        "sendTo": "yazan@gmail.com",
+        "subject": "مجموع المبيعات ",
+        "message": "=<!DOCTYPE html>\n<html lang=\"ar\" dir=\"rtl\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>تقرير المبيعات اليومي</title>\n    <style>\n        body {\n            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n            background-color: #fff0f5; /* خلفية وردية ناعمة جداً للمظهر العام */\n            color: #4a3b40; /* لون نص داكن متناسق مع الوردي */\n            margin: 0;\n            padding: 20px;\n        }\n        .report-card {\n            max-width: 480px;\n            margin: 40px auto;\n            background: #ffffff;\n            border-radius: 16px;\n            box-shadow: 0 8px 24px rgba(255, 182, 193, 0.3); /* ظل وردي ناعم */\n            border: 1px solid #ffdae0;\n            border-top: 6px solid #ffb6c1; /* شريط علوي بلون بيبي بينك */\n            padding: 30px;\n        }\n        h2 {\n            color: #d47a87; /* درجة وردي أغمق للعنوان ليبرز بوضوح */\n            margin-top: 0;\n            font-size: 22px;\n            font-weight: 700;\n        }\n        .info-section {\n            background-color: #fff5f6;\n            border-right: 4px solid #ffb6c1; /* حد وردي ناعم */\n            padding: 15px;\n            margin: 20px 0;\n            border-radius: 4px 12px 12px 4px;\n        }\n        .revenue-section {\n            background-color: #ffe4e8; /* درجة وردي مميزة للمبيعات */\n            border-right: 4px solid #ff8da1; /* حد وردي أغمق للتأكيد */\n            padding: 15px;\n            margin: 20px 0;\n            border-radius: 4px 12px 12px 4px;\n        }\n        .label {\n            font-weight: bold;\n            color: #8a7377;\n            display: block;\n            font-size: 14px;\n            margin-bottom: 6px;\n        }\n        .value {\n            font-size: 18px;\n            color: #4a3b40;\n            font-weight: 600;\n        }\n        .footer {\n            margin-top: 30px;\n            padding-top: 15px;\n            border-top: 1px dashed #ffdae0;\n            color: #8a7377;\n            font-size: 15px;\n            line-height: 1.6;\n        }\n        .signature {\n            font-weight: bold;\n            color: #d47a87;\n            font-size: 16px;\n        }\n    </style>\n</head>\n<body>\n\n    <div class=\"report-card\">\n        <h2>مرحباً بك مدير المبيعات،</h2>\n        \n        <div class=\"info-section\">\n            <span class=\"label\">مجموع المبيعات لهذا اليوم:</span>\n            <span class=\"value\">{{ $('Schedule Trigger').item.json['Readable date'] }}</span>\n        </div>\n        \n        <div class=\"revenue-section\">\n            <span class=\"label\">مجموع المبيعات هو:</span>\n            <span class=\"value\" style=\"color: #c94a5f;\">{{ $json.sum_Revenue }}</span>\n        </div>\n        \n        <div class=\"footer\">\n            تحياتي،<br>\n            <span class=\"signature\">يزن</span>\n        </div>\n    </div>\n\n</body>\n</html>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -160,
+        -192
+      ],
+      "id": "017ac99c-097f-4c51-8c03-d26acf182150",
+      "name": "Send a message",
+      "webhookId": "84714666-e99a-42a1-9a8d-47ab60eb7ec3",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Ainaw78xBffg9cen",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ed4cd93d-6723-4c6f-aafe-8c433cef81da",
+              "leftValue": "={{ $('Summarize').item.json.sum_Revenue }}",
+              "rightValue": 1500,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        64,
+        -192
+      ],
+      "id": "c5c901d2-0acc-46ed-bcfc-45467a6219d8",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "CEO@gmail.com",
+        "subject": "مجموع المبيعات ",
+        "emailType": "text",
+        "message": "=مرحبا يا مدير الموظف لم يصل للهدف و تاريخ اليوم هو : {{ $('Schedule Trigger').item.json.timestamp }}\nو مجموع المبيعات هو : {{ $('Summarize').item.json.sum_Revenue }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        288,
+        -192
+      ],
+      "id": "97173589-8e35-43ca-90fb-c281c872e6ed",
+      "name": "Send a message1",
+      "webhookId": "84714666-e99a-42a1-9a8d-47ab60eb7ec3",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Ainaw78xBffg9cen",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a86a82e1-0f81-472d-94e2-677e6872a9b1",
+              "leftValue": "={{ $json.Date }}",
+              "rightValue": "={{ $now.toFormat('MM/d/y') }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        -608,
+        -192
+      ],
+      "id": "0a5a0b6e-b96d-4c04-9fca-7a279fa97e0e",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -608,
+        0
+      ],
+      "id": "8c0d177a-3a5e-489b-8767-f02ceeafba4d",
+      "name": "Wait",
+      "webhookId": "8174b08f-f03b-40bc-b193-545ff56925b7"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Summarize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "c04d70dd-a02e-41e8-8011-e5f62666f214",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "47dfbeed345c6320c49a146b00907747ec6846e8892855e7adaded22fa5bcb43"
+  },
+  "id": "EIxoujCG9PH1IBSy",
+  "tags": []
+}
