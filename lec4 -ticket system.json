@@ -1,0 +1,287 @@
+{
+  "name": "lec4 -ticket system",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "ticket system ",
+        "formDescription": "please descraib proplem",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "name ",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email ",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "describ your problem ",
+              "fieldType": "textarea"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -896,
+        160
+      ],
+      "id": "e100a6ac-3b99-4898-88ad-9826e849d694",
+      "name": "On form submission",
+      "webhookId": "2f427a07-9fe3-4c94-8dd4-bd2628fd95bb"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Jbf2AosFhA9esOi_dAJHk8-EwURk_gJjRo06v8__MCo",
+          "mode": "list",
+          "cachedResultName": "lec4 -ticket system",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Jbf2AosFhA9esOi_dAJHk8-EwURk_gJjRo06v8__MCo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Jbf2AosFhA9esOi_dAJHk8-EwURk_gJjRo06v8__MCo/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $json['name '] }}",
+            "Email": "={{ $json['Email '] }}",
+            "describ your problem": "={{ $json['describ your problem '] }}",
+            "submittedAt": "={{ $json.submittedAt }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "describ your problem",
+              "displayName": "describ your problem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "submittedAt",
+              "displayName": "submittedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -672,
+        160
+      ],
+      "id": "525e1af8-eccc-402c-bb3f-780612d1e57a",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ygF08lcYYhFQkB6D",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json['describ your problem'] }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=ed in analyzing, classifying, and formatting incoming support tickets for internal departments.\n\n# Objective  \nYour main goal is to automatically classify incoming support issues into either the IT Department or the HR Department, determine the correct priority level, calculate an appropriate resolution deadline based on that priority, and format the output into a clean HTML structure with an urgent/critical theme.\n\n# Behavior  \nYou analyze text objectively and structure your responses strictly using HTML as requested. Your tone in the generated output reflects a professional, high-priority ticketing system.\n\n# Date and Time: {{ $now }}\n\n# Instructions and Rules\n\n## 1. Classification Logic\nAnalyze the ticket details and assign it to one of the following departments:\n* **IT Department:** For technical issues, software bugs, hardware failures, network problems, access permissions, and system errors.\n* **HR Department:** For inquiries regarding employee benefits, vacations, payroll, workplace policies, onboarding, or internal personnel documentation.\n\n## 2. Priority and Deadline Assessment\nEvaluate the urgency of the problem based on the title and details provided by the user. Assign a priority and a corresponding strict deadline from the current time:\n* **Emergency / Critical (طوارئ):** If the problem causes an immediate work stoppage or severe operational risk. Set the resolution deadline from 1 to 4 hours.\n* **High (عالية):** If the problem disrupts important work but does not cause a total stoppage. Set the resolution deadline from 4 to 12 hours.\n* **Normal / Medium (متوسطة):** If the problem is standard and can tolerate waiting. Set the resolution deadline from 12 to 24 hours.\n\n## 3. Output Formatting Rules\nYou must wrap your final response inside a structured HTML format. The theme must visually reflect a high-priority or urgent alert system (using red, dark gray, and orange accent colors). Use the template structure below for your output:\n\n```html\n<div style=\"font-family: Arial, sans-serif; border: 2px solid #d9534f; border-radius: 8px; max-width: 600px; margin: 20px auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden;\">\n    <div style=\"background-color: #d9534f; color: white; padding: 15px; text-align: center; font-size: 18px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;\">\n        High Priority Ticket Alert / تنبيه تذكرة طارئة\n    </div>\n    <div style=\"padding: 20px; background-color: #f9f9f9; color: #333; line-height: 1.6;\">\n        <table style=\"width: 100%; border-collapse: collapse;\">\n            <tr>\n                <td style=\"padding: 8px 0; font-weight: bold; width: 40%; color: #555;\">القسم المسؤول (Assigned Department):</td>\n                <td style=\"padding: 8px 0; font-weight: bold; color: #d9534f;\">[Insert IT Department or HR Department]</td>\n            </tr>\n            <tr>\n                <td style=\"padding: 8px 0; font-weight: bold; color: #555;\">عنوان المشكلة (Ticket Title):</td>\n                <td style=\"padding: 8px 0; color: #111;\">[Insert Ticket Title Here]</td>\n            </tr>\n            <tr>\n                <td style=\"padding: 8px 0; font-weight: bold; color: #555;\">درجة الأولوية (Priority Level):</td>\n                <td style=\"padding: 8px 0;\"><span style=\"background-color: #f2dede; color: #a94442; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 14px;\">[Insert Priority Here: Emergency/High/Normal]</span></td>\n            </tr>\n            <tr>\n                <td style=\"padding: 8px 0; font-weight: bold; color: #555;\">آخر موعد للحل (Resolution Deadline):</td>\n                <td style=\"padding: 8px 0; font-weight: bold; color: #333;\">[Insert Calculated Deadline/Timeframe Here, e.g., Within 2 Hours]</td>\n            </tr>\n        </table>\n        <hr style=\"border: 0; border-top: 1px solid #eee; margin: 15px 0;\">\n        <div style=\"font-weight: bold; margin-bottom: 5px; color: #555;\">تفاصيل المشكلة (Ticket Details):</div>\n        <div style=\"background-color: #fff; border-left: 4px solid #d9534f; padding: 10px; border-radius: 4px; font-style: italic; color: #666;\">\n            [Insert Complete Ticket Details Here]\n        </div>\n    </div>\n</div>\n"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        -448,
+        160
+      ],
+      "id": "9ab3ee3e-2406-46cc-b675-e5554af6791b",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -384,
+        384
+      ],
+      "id": "2ac1b1bb-ad6b-4b8a-ad46-42159ecf648e",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "43NRJeTgHXRA1j9v",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "IT@gmail.com",
+        "subject": "ticket",
+        "message": "={{ $json.text }}",
+        "responseType": "customForm",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "HR Deparment",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "راما - الرواتب "
+                  },
+                  {
+                    "option": "شام- الاجازات "
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -96,
+        160
+      ],
+      "id": "dba4e796-3748-4dfc-91fa-a98e6295473a",
+      "name": "Send message and wait for response",
+      "webhookId": "0d4f903f-e12b-4d42-978b-1575e2b87489",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "M60oYHLJvivk6EYn",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "name ": "batool",
+          "Email ": "yxz@gmail.com",
+          "describ your problem ": "عندي عرض تقديمي للملف وهو لا يعمل ويجب ان تحل المشكلة باسرع وقتت ممكن, لانه مقدمين على هطاء ولازم اعرض الملف",
+          "submittedAt": "2026-05-19T18:09:15.507+03:00",
+          "formMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Send message and wait for response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "52499177-eeac-4567-a02e-f816b4fc7046",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "47dfbeed345c6320c49a146b00907747ec6846e8892855e7adaded22fa5bcb43"
+  },
+  "id": "kq577qHsCvDO8uFJ",
+  "tags": []
+}
