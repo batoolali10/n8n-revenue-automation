@@ -68,3 +68,29 @@ An end-to-end AI-powered data processor that monitors school feedback forms, use
 * **AI Engine:** Google Gemini 2.5 Flash (via LangChain Integration)
 * **Data Core:** Google Sheets API (Polling & Conditional Updating)
 * **Alerting System:** Gmail API
+
+---
+
+## 📌 Project 4: Chatbot Agent for Food Ordering (Shahia Restaurant)
+
+An advanced conversational **AI Agent** built inside **n8n** using LangChain nodes, integrated with **Telegram** to act as an automated customer service and ordering assistant. The agent is strictly constrained to custom persona configurations, handles dynamic pricing, utilizes specific external tools for mathematical checks, and automates invoices.
+
+![Project 4 Chatbot](chat_tele.PNG)
+
+### ⚙️ Workflow Architecture & Logic
+1. **Telegram Chat Trigger:** Fires instantly whenever a customer sends a message to the restaurant's Telegram bot.
+2. **AI Agent Core (LangChain):** Manages the core conversation logic using an **OpenAI Chat Model (GPT)** paired with a **Window Buffer Memory node** to track the last 30 interactions for continuous context retention.
+3. **Hyper-Localized Persona:** Configured via system prompts to strictly communicate warmly in the localized **Irbid, Jordan Arabic dialect**, delivering an authentic and culturally contextualized customer experience.
+4. **Tool-Augmented Execution (Function Calling):**
+   * **Calculator Tool:** Automatically invoked by the agent whenever an order is compiled to guarantee 100% mathematical accuracy on total bills in Jordanian Dinars (JOD).
+   * **Gmail Tool:** Triggered automatically only after the agent secures explicit confirmation along with the customer's full name and phone number.
+5. **Automated Invoice Generation:** Formats the final breakdown (items, quantities, individual pricing, grand total) into an enterprise-grade HTML invoice emailed directly to the kitchen staff.
+6. **Human-in-the-Loop Validation:** Uses a **Send Message & Wait for Response** flow on Telegram to pause operations until the customer or manager triggers an action.
+
+### 🛠️ Tech Stack & Tools
+* **Automation Platform:** n8n
+* **AI Orchestration Framework:** LangChain Nodes (Agent, Buffer Memory)
+* **LLM Core Engines:** OpenAI GPT Chat Model & Google Gemini Chat Model
+* **Mathematical Reasoning:** LangChain Calculator Tool
+* **Messaging Interface:** Telegram Bot API & Telegram Triggers
+* **Alerting & Infrastructure:** Gmail API (HTML Templating)
