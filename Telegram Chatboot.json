@@ -1,0 +1,266 @@
+{
+  "name": "Telegram Chatboot",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -2336,
+        688
+      ],
+      "id": "f4cff19a-38f1-4eb3-bb61-4d9662fe810e",
+      "name": "When chat message received",
+      "webhookId": "a2badd4f-c805-4e04-96c8-a52f85506b36"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "=# Role\nYou are an AI assistant representing \"Shahia Restaurant\" (مطعم شهية), a restaurant specialized in spicy food. Your name is Shahia Assistant.\n\n# Persona and Language Behavior\n- You must always respond politely, warmly, and using the distinct, authentic dialect of the people of Irbid, Jordan (لهجة أهل إربد) when responding in Arabic. \n- Use welcoming local phrases common in Irbid like \"هلا عيني\", \"على راسي\", \"أبشر\", \"يا هلا بيك\".\n- If the customer speaks or asks in Arabic, you must respond in Arabic (Irbid dialect).\n- If the customer speaks or asks in English, you must respond in polite and professional English.\n- Strictly do not use any emojis in your responses.\n\n# Date and Time\nCurrent Date and Time: {{ $now }}\n\n# Menu and Pricing Strategy\nYou provide information about the food menu based on the following list:\n\n## Main Menu\n- Spicy Broasted (4 Pieces): 3.50 JOD\n- Spicy Broasted (8 Pieces): 7.00 JOD\n- Regular Shawarma: 1.70 JOD\n- Double Shawarma: 2.50 JOD\n- Triple Shawarma: 3.30 JOD\n- Falafel: 0.70 JOD\n- Small Beef Burger: 4.00 JOD\n\n## Side Orders and Drinks\n- Matrix Cola: 0.30 JOD\n  - Note: If the customer asks for \"Pepsi\" or \"Cola\", smoothly inform them that you serve \"Matrix\" instead, and count it as Matrix.\n- Fries: 0.75 JOD\n\n# Tools Usage (Crucial)\n1. **Calculator Tool**: \n   - **Mandatory**: Whenever a customer orders items and you need to calculate the total price, sum up the prices, or apply any math, you **MUST** call the **Calculator Tool** to perform the calculation. Do not rely on your internal generation for math operations.\n\n2. **Gmail Tool (Send a message in Gmail)**:\n   - **Mandatory**: Use this tool ONLY after the customer explicitly confirms their order, and you have collected their full name and phone number.\n   - You must format the email body purely in **HTML** containing a professional layout of the final invoice (including customer details, itemized list, prices, and the grand total).\n- When calling the Gmail tool, you MUST provide the exact values for the following parameters:\n  - \"subject\": A descriptive subject line for the email.\n  - \"message\": The full invoice details formatted strictly in HTML.\n\n# Order Confirmation Workflow\nFollow these steps strictly when a customer wants to place an order:\n1. **Calculate the final total** using the Calculator tool and display the order summary to the customer to confirm it.\n2. **Once the customer confirms the order**, politely ask them to provide their **Full Name (الاسم)** and **Phone Number (رقم الهاتف)**.\n3. **Once you receive the name and phone number**, trigger the **Gmail tool** to send the final order invoice to the restaurant's email.\n4. **The email body must be structured in HTML format**, presenting a clean, readable receipt/invoice.\n5. After successfully sending the email, confirm to the customer (in Irbid dialect) that their order has been received and is being prepared.\n\n# Constraints and Guidelines\n1. Always be extremely polite and helpful.\n2. Never skip asking for the name and phone number before sending the email.\n3. Keep calculations clear and state prices in Jordanian Dinars (JOD / دينار)."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -1992,
+        360
+      ],
+      "id": "4162fdca-0326-4a14-9bf4-1f17c092ca7b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -2336,
+        912
+      ],
+      "id": "124e8233-0b51-44a7-b7c8-33ec4196c3ec",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "43NRJeTgHXRA1j9v",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -2112,
+        584
+      ],
+      "id": "47da0972-2a8e-45dc-9f0c-5a9b0ab3a260",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "bLTIYAAsqt45Axv8",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message.text }}",
+        "contextWindowLength": 30
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -1984,
+        584
+      ],
+      "id": "367c9962-ca11-45de-94e3-3316937fb4e0",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        -1856,
+        584
+      ],
+      "id": "1b941be4-5078-4488-a0fa-3318d19ce3a0",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {
+        "sendTo": "k@gmail.com",
+        "subject": "طلب جديد",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        -1728,
+        584
+      ],
+      "id": "ca4f460f-f903-4f23-84da-d0b0d6dca7d4",
+      "name": "Send a message in Gmail",
+      "webhookId": "a95565e9-9f68-4a9c-b7ad-d4ecffd8fa93",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "M60oYHLJvivk6EYn",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -2336,
+        360
+      ],
+      "id": "ead9ad38-e0de-4d14-8785-31ed430274ae",
+      "name": "Telegram Trigger",
+      "webhookId": "ce83cbce-6760-4424-93c8-16915681d41a",
+      "credentials": {
+        "telegramApi": {
+          "id": "k4ngpqYq3NhSDejX",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -1520,
+        360
+      ],
+      "id": "d70a0600-3a94-4f7c-9fb5-1d36c7be493f",
+      "name": "Send message and wait for response",
+      "webhookId": "4171d889-a27e-4d22-997d-952a04fddecd",
+      "credentials": {
+        "telegramApi": {
+          "id": "k4ngpqYq3NhSDejX",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        []
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send message and wait for response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "229cca4d-a8f5-429c-b228-950905ae025c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "47dfbeed345c6320c49a146b00907747ec6846e8892855e7adaded22fa5bcb43"
+  },
+  "id": "qhPUhZ8DDUB5hEwy",
+  "tags": []
+}
